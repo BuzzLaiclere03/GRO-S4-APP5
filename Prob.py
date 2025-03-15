@@ -4,14 +4,14 @@ from math import sin, cos, tan, asin, acos, atan, radians, degrees, sqrt, pi
 mb = 0.293 #Masse baton (kg)
 mp = 0.20275579 #Masse poids (kg)
 g = 9.81 #Accélération gravitationnelle (m/s^2)
-hi = 1 #Hauteur initiale (m)
+hi = 0.1 #Hauteur initiale (m)
 Ib = 0.042033 #Moment d'inertie du baton (kg*m^2)
 r = 0.0508 #Rayon de la poulie (m)
 eff = 0.75 #Efficacité du système
 Lb = 0.63 #Longueur du baton (m)
 Lc = 0.291 #Longueur du centre de masse depuis le point de pivot (m)
-Ang = 45 #Angle du baton (deg)
-Gr = 0.5 #Rapport de réduction
+Ang = pi/4 #Angle du baton (rad)
+Gr = 1.5 #Rapport de réduction
 
 print("CALCULS AVANT BILANS")
 #Torque nécessaire pour lever baton
@@ -27,8 +27,13 @@ nbtourpoulie = hi/(2*pi*r)
 nbtourbaton = nbtourpoulie*Gr
 hbf = nbtourbaton*Lb*cos(Ang)
 
+print("Nombre de tours de la poulie: ", nbtourpoulie)
+print("Nombre de tours du baton: ", nbtourbaton)
+if nbtourbaton > 0.5:
+    print("Le baton a trop tourné")
+
 if hbf < 0:
-    hbf = hbf*-1 + Lc
+    hbf = hbf*-1 + Lc*cos(Ang)
 
 #hbf = hbf*sin(Ang)
 
