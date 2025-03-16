@@ -4,14 +4,14 @@ from math import sin, cos, tan, asin, acos, atan, radians, degrees, sqrt, pi
 mb = 0.293 #Masse baton (kg)
 mp = 0.20275579 #Masse poids (kg)
 g = 9.81 #Accélération gravitationnelle (m/s^2)
-hi = 0.1 #Hauteur initiale (m)
+hi = 1 #Hauteur initiale de la masse (m)
 Ib = 0.042033 #Moment d'inertie du baton (kg*m^2)
 r = 0.0508 #Rayon de la poulie (m)
-eff = 0.75 #Efficacité du système
+eff = 0.5 #Efficacité du système
 Lb = 0.63 #Longueur du baton (m)
 Lc = 0.291 #Longueur du centre de masse depuis le point de pivot (m)
 Ang = pi/4 #Angle du baton (rad)
-Gr = 1.5 #Rapport de réduction
+Gr = 1/12 #Rapport de réduction
 
 print("CALCULS AVANT BILANS")
 #Torque nécessaire pour lever baton
@@ -19,7 +19,7 @@ T = mb*g*Lc*sin(Ang)
 print("Torque nécessaire pour lever le baton: ", T, "N*m")
 
 #Torque émise par le système
-Te = eff*mp*g*hi/Gr
+Te = eff*mp*g*r/Gr
 print("Torque émise par le système: ", Te, "N*m")
 
 #Hauteur finale du baton
