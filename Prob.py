@@ -1,4 +1,6 @@
 from math import sin, cos, tan, asin, acos, atan, radians, degrees, sqrt, pi
+import numpy as np
+import matplotlib.pyplot as plt
 
 #Constantes
 mb = 0.293 #Masse baton (kg)
@@ -11,7 +13,7 @@ eff = 0.5 #Efficacité du système
 Lb = 0.63 #Longueur du baton (m)
 Lc = 0.291 #Longueur du centre de masse depuis le point de pivot (m)
 Ang = pi/4 #Angle du baton (rad)
-Gr = 1/12 #Rapport de réduction
+Gr = 1/9 #Rapport de réduction
 
 print("CALCULS AVANT BILANS")
 #Torque nécessaire pour lever baton
@@ -59,3 +61,63 @@ print("")
 print("BILAN 3")
 wbf = sqrt(2*mb*g*hbf2/Ib) #Vitesse angulaire du baton (rad/s)
 print("Vitesse angulaire finale du baton: ", wbf, "rad/s")
+
+#Pour simulation
+#Gr = np.array([1/16, 1/12, 1/9, 1/8, 1/6])
+Gr = np.linspace(1/20, 1/2, 100)
+
+nbtourpoulie = hi/(2*pi*r)
+nbtourbaton = nbtourpoulie*Gr
+hbf = nbtourbaton*Lb*cos(Ang)
+
+index = np.where(hbf < 0)[0]
+if len(index) > 0:
+    hbf[index] = hbf[index]*-1 + Lc*cos(Ang)
+
+Ppi = mp*g*hi #Énergie potentielle initiale du poids (J)
+Vp = np.sqrt((2*g*(mp*hi*eff+mb*hbf))/(mp*Ib*(1+(Gr*r)**2))) #Vitesse finale du poids (m/s)
+#Ti = Ppi*eff*r/(Vp*Gr)
+Ti = eff*mp*g*r/Gr
+
+wb = Vp*Gr*r #Vitesse angulaire du baton (rad/s)
+hbf2 = ((Ib*wb**2)/2 + mb*g*hbf)/(mb*g) #Hauteur finale du baton (m)
+
+wbf = np.sqrt(2*mb*g*hbf2/Ib) #Vitesse angulaire du baton (rad/s)
+
+#Graphique
+plt.figure(1)
+plt.suptitle("Bilan 1")
+
+plt.subplot(131)
+plt.title("hauteur")
+plt.plot(Gr, hbf)
+
+plt.subplot(132)
+plt.title("vitesse")
+plt.plot(Gr, Vp)
+
+plt.subplot(133)
+plt.title("torque")
+plt.plot(Gr, Ti)
+plt.plot(Gr, T*np.ones(len(Gr)))
+
+
+plt.figure(2)
+plt.suptitle("Bilan 2")
+plt.subplot(121)
+plt.title("hauteur")
+plt.plot(Gr, hbf2)
+
+plt.subplot(122)
+plt.title("vitesse")
+plt.plot(Gr, wb)
+
+
+plt.figure(3)
+plt.suptitle("Bilan 3")
+plt.title("vitesse")
+plt.plot(Gr, wbf)
+
+
+plt.tight_layout()  # Adjust subplots to fit into figure area.
+plt.show()
